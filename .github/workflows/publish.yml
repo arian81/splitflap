@@ -1,0 +1,79 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build:lib
+
+      - name: Publish @splitflap/core
+        run: |
+          PKG=@splitflap/core
+          LOCAL=$(node -p "require('./packages/core/package.json').version")
+          REMOTE=$(npm view "$PKG" version 2>/dev/null || echo "0.0.0")
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            pnpm --filter "$PKG" publish --access public --no-git-checks --provenance
+          else
+            echo "$PKG@$LOCAL already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @splitflap/react
+        run: |
+          PKG=@splitflap/react
+          LOCAL=$(node -p "require('./packages/splitflap/package.json').version")
+          REMOTE=$(npm view "$PKG" version 2>/dev/null || echo "0.0.0")
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            pnpm --filter "$PKG" publish --access public --no-git-checks --provenance
+          else
+            echo "$PKG@$LOCAL already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @splitflap/vue
+        run: |
+          PKG=@splitflap/vue
+          LOCAL=$(node -p "require('./packages/vue/package.json').version")
+          REMOTE=$(npm view "$PKG" version 2>/dev/null || echo "0.0.0")
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            pnpm --filter "$PKG" publish --access public --no-git-checks --provenance
+          else
+            echo "$PKG@$LOCAL already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @splitflap/svelte
+        run: |
+          PKG=@splitflap/svelte
+          LOCAL=$(node -p "require('./packages/svelte/package.json').version")
+          REMOTE=$(npm view "$PKG" version 2>/dev/null || echo "0.0.0")
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            pnpm --filter "$PKG" publish --access public --no-git-checks --provenance
+          else
+            echo "$PKG@$LOCAL already published, skipping"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
