@@ -341,7 +341,7 @@ function App() {
           <p className="m-0 text-center text-[15px] leading-[1.7] text-gray-400">
             Airport-style flip animation for the web.
             <br />
-            No images. No dependencies. Just CSS 3D transforms.
+            No 3D library. No dependencies. Just CSS transforms.
           </p>
           <FrameworkPicker value={framework} onChange={setFramework} />
         </section>
