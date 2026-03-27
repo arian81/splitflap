@@ -2,6 +2,139 @@ import { useState } from "react";
 import { SplitFlap } from "@splitflap/react";
 import "./App.css";
 
+type Framework = "react" | "vue" | "svelte" | "vanilla";
+
+const INSTALL: Record<Framework, string> = {
+  react: "npm install @splitflap/react",
+  vue: "npm install @splitflap/vue",
+  svelte: "npm install @splitflap/svelte",
+  vanilla: "npm install @splitflap/core",
+};
+
+const QUICKSTART: Record<Framework, string> = {
+  react: `import { SplitFlap } from "@splitflap/react";
+
+<SplitFlap text="Hello" />`,
+  vue: `<script setup>
+import { SplitFlap } from "@splitflap/vue";
+</script>
+
+<template>
+  <SplitFlap text="Hello" />
+</template>`,
+  svelte: `<script>
+  import { SplitFlap } from "@splitflap/svelte";
+</script>
+
+<SplitFlap text="Hello" />`,
+  vanilla: `import { SplitFlap } from "@splitflap/core";
+
+const board = new SplitFlap(document.getElementById("board"), {
+  text: "Hello",
+});`,
+};
+
+const EXAMPLES: Record<Framework, Record<string, string>> = {
+  react: {
+    default: `<SplitFlap text="Arrivals" />`,
+    departures: `<SplitFlap
+  text="Gate 42"
+  textColor="#FFD700"
+  charBackground="#1a1a4e"
+  dividerColor="#0d0d2b"
+/>`,
+    scoreboard: `<SplitFlap
+  text="99,872"
+  charWidth={32}
+  charHeight={48}
+  speed={6}
+  textColor="#34d399"
+  charBackground="#0f1f18"
+/>`,
+    textInit: `<SplitFlap
+  text="Open"
+  textInit="Shut"
+/>`,
+  },
+  vue: {
+    default: `<SplitFlap text="Arrivals" />`,
+    departures: `<SplitFlap
+  text="Gate 42"
+  text-color="#FFD700"
+  char-background="#1a1a4e"
+  divider-color="#0d0d2b"
+/>`,
+    scoreboard: `<SplitFlap
+  text="99,872"
+  :char-width="32"
+  :char-height="48"
+  :speed="6"
+  text-color="#34d399"
+  char-background="#0f1f18"
+/>`,
+    textInit: `<SplitFlap
+  text="Open"
+  text-init="Shut"
+/>`,
+  },
+  svelte: {
+    default: `<SplitFlap text="Arrivals" />`,
+    departures: `<SplitFlap
+  text="Gate 42"
+  textColor="#FFD700"
+  charBackground="#1a1a4e"
+  dividerColor="#0d0d2b"
+/>`,
+    scoreboard: `<SplitFlap
+  text="99,872"
+  charWidth={32}
+  charHeight={48}
+  speed={6}
+  textColor="#34d399"
+  charBackground="#0f1f18"
+/>`,
+    textInit: `<SplitFlap
+  text="Open"
+  textInit="Shut"
+/>`,
+  },
+  vanilla: {
+    default: `new SplitFlap(el, { text: "Arrivals" });`,
+    departures: `new SplitFlap(el, {
+  text: "Gate 42",
+  textColor: "#FFD700",
+  charBackground: "#1a1a4e",
+  dividerColor: "#0d0d2b",
+});`,
+    scoreboard: `new SplitFlap(el, {
+  text: "99,872",
+  charWidth: 32,
+  charHeight: 48,
+  speed: 6,
+  textColor: "#34d399",
+  charBackground: "#0f1f18",
+});`,
+    textInit: `new SplitFlap(el, {
+  text: "Open",
+  textInit: "Shut",
+});`,
+  },
+};
+
+const CALLBACK_PROP: Record<Framework, { name: string; type: string }> = {
+  react: { name: "onComplete", type: "() => void" },
+  vue: { name: "complete (event)", type: "emitted event" },
+  svelte: { name: "onComplete", type: "() => void" },
+  vanilla: { name: "onComplete", type: "() => void" },
+};
+
+const LABELS: Record<Framework, string> = {
+  react: "React",
+  vue: "Vue",
+  svelte: "Svelte",
+  vanilla: "Vanilla JS",
+};
+
 function Code({ children }: { children: string }) {
   return (
     <pre className="m-0 overflow-x-auto rounded-lg bg-[#1a1a1a] px-5 py-4 font-mono text-[13px] leading-relaxed text-[#d4d4d4]">
@@ -10,8 +143,36 @@ function Code({ children }: { children: string }) {
   );
 }
 
+function FrameworkPicker({
+  value,
+  onChange,
+}: {
+  value: Framework;
+  onChange: (fw: Framework) => void;
+}) {
+  const frameworks: Framework[] = ["react", "vue", "svelte", "vanilla"];
+  return (
+    <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
+      {frameworks.map((fw) => (
+        <button
+          key={fw}
+          onClick={() => onChange(fw)}
+          className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+            value === fw
+              ? "bg-white text-gray-900 shadow-sm"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          {LABELS[fw]}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function App() {
   const [showContent, setShowContent] = useState(false);
+  const [framework, setFramework] = useState<Framework>("react");
 
   return (
     <>
@@ -54,10 +215,19 @@ function App() {
             />
           </div>
           <p className="m-0 text-center text-[15px] leading-[1.7] text-gray-400">
-            Airport-style flip animation for React.
+            Airport-style flip animation for the web.
             <br />
             No images. No dependencies. Just CSS 3D transforms.
           </p>
+          <FrameworkPicker value={framework} onChange={setFramework} />
+        </section>
+
+        {/* Install */}
+        <section className="mx-auto max-w-[640px] px-6 pb-18">
+          <h2 className="m-0 mb-8 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
+            Install
+          </h2>
+          <Code>{INSTALL[framework]}</Code>
         </section>
 
         {/* Quick start */}
@@ -65,9 +235,7 @@ function App() {
           <h2 className="m-0 mb-8 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
             Quick start
           </h2>
-          <Code>{`import { SplitFlap } from "@splitflap/react";
-
-<SplitFlap text="Hello" />`}</Code>
+          <Code>{QUICKSTART[framework]}</Code>
         </section>
 
         {/* Examples */}
@@ -84,7 +252,7 @@ function App() {
             <div className="mb-4 flex justify-center rounded-lg bg-gray-50 py-8">
               <SplitFlap text="Arrivals" autoplay={showContent} />
             </div>
-            <Code>{`<SplitFlap text="Arrivals" />`}</Code>
+            <Code>{EXAMPLES[framework].default}</Code>
           </div>
 
           <div className="mb-14">
@@ -105,12 +273,7 @@ function App() {
                 autoplay={showContent}
               />
             </div>
-            <Code>{`<SplitFlap
-  text="Gate 42"
-  textColor="#FFD700"
-  charBackground="#1a1a4e"
-  dividerColor="#0d0d2b"
-/>`}</Code>
+            <Code>{EXAMPLES[framework].departures}</Code>
           </div>
 
           <div className="mb-14">
@@ -133,14 +296,7 @@ function App() {
                 autoplay={showContent}
               />
             </div>
-            <Code>{`<SplitFlap
-  text="99,872"
-  charWidth={32}
-  charHeight={48}
-  speed={6}
-  textColor="#34d399"
-  charBackground="#0f1f18"
-/>`}</Code>
+            <Code>{EXAMPLES[framework].scoreboard}</Code>
           </div>
 
           <div>
@@ -163,24 +319,21 @@ function App() {
                 autoplay={showContent}
               />
             </div>
-            <Code>{`<SplitFlap
-  text="Open"
-  textInit="Shut"
-/>`}</Code>
+            <Code>{EXAMPLES[framework].textInit}</Code>
           </div>
         </section>
 
         {/* Props */}
         <section className="mx-auto max-w-[640px] px-6 pb-18">
           <h2 className="m-0 mb-8 border-b border-gray-200 pb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
-            Props
+            {framework === "vanilla" ? "Options" : "Props"}
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr>
                   <th className="border-b border-gray-200 pb-2.5 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    Prop
+                    {framework === "vanilla" ? "Option" : "Prop"}
                   </th>
                   <th className="border-b border-gray-200 pb-2.5 pr-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
                     Type
@@ -249,8 +402,8 @@ function App() {
                   <td>Line between upper/lower halves</td>
                 </tr>
                 <tr>
-                  <td><code>onComplete</code></td>
-                  <td>{"() => void"}</td>
+                  <td><code>{CALLBACK_PROP[framework].name}</code></td>
+                  <td>{CALLBACK_PROP[framework].type}</td>
                   <td>&mdash;</td>
                   <td>Called when all letters settle</td>
                 </tr>
@@ -262,7 +415,7 @@ function App() {
         <footer className="flex items-center justify-center gap-2.5 px-6 py-8 text-xs tracking-wide text-gray-300">
           <span>SplitFlap</span>
           <span className="size-[3px] rounded-full bg-gray-200" />
-          <span>React + CSS 3D</span>
+          <span>CSS 3D</span>
         </footer>
       </div>
     </>
