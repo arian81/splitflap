@@ -1,0 +1,48 @@
+{
+  "name": "@splitflap/react",
+  "version": "0.1.1",
+  "description": "Split-flap display animation component for React.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "react",
+    "split-flap",
+    "flipboard",
+    "animation",
+    "airport",
+    "css3d"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@splitflap/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "react": "^19.2.4",
+    "@types/react": "^19.2.14",
+    "tsup": "^8.0.0",
+    "typescript": "~5.9.3"
+  }
+}

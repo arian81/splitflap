@@ -1,0 +1,44 @@
+{
+  "name": "@splitflap/vue",
+  "version": "0.1.1",
+  "description": "Split-flap display animation component for Vue 3.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "vue",
+    "split-flap",
+    "flipboard",
+    "animation"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@splitflap/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": ">=3"
+  },
+  "devDependencies": {
+    "vue": "^3.5.0",
+    "tsup": "^8.0.0",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,11 @@
+/* Only the things that are awkward to express purely in Tailwind */
+
+/* Splash: transition both opacity AND visibility together */
+.splash-transition {
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Page: fade in with a slight delay after splash starts disappearing */
+.page-transition {
+  transition: opacity 0.5s ease 0.3s;
+}

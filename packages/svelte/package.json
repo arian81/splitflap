@@ -1,0 +1,50 @@
+{
+  "name": "@splitflap/svelte",
+  "version": "0.1.1",
+  "description": "Split-flap display animation component for Svelte.",
+  "type": "module",
+  "svelte": "./dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "svelte": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "svelte",
+    "split-flap",
+    "flipboard",
+    "animation"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "svelte-package -i src -o dist",
+    "lint": "svelte-check"
+  },
+  "dependencies": {
+    "@splitflap/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "svelte": ">=4"
+  },
+  "devDependencies": {
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "@sveltejs/package": "^2.0.0",
+    "typescript": "~5.9.3"
+  }
+}

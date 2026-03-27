@@ -1,0 +1,12 @@
+{
+  "name": "splitflap-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter demo dev",
+    "build": "pnpm build:core && pnpm build:wrappers && pnpm --filter demo build",
+    "build:core": "pnpm --filter @splitflap/core build",
+    "build:wrappers": "pnpm --filter @splitflap/react build && pnpm --filter @splitflap/vue build && pnpm --filter @splitflap/svelte build",
+    "build:lib": "pnpm build:core && pnpm build:wrappers",
+    "lint": "pnpm -r lint"
+  }
+}
